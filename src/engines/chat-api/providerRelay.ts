@@ -5,8 +5,8 @@ export {
   isAllowedProviderRelayTarget,
   isProviderModelListRelayTarget,
   sanitizeProviderRelayHeaders
-} from './providerRelayShared';
-import { isAllowedProviderRelayTarget } from './providerRelayShared';
+} from './providerRelayShared.js';
+import { isAllowedProviderRelayTarget } from './providerRelayShared.js';
 
 export const ANTHROPIC_BROWSER_ACCESS_HEADER = 'anthropic-dangerous-direct-browser-access';
 
