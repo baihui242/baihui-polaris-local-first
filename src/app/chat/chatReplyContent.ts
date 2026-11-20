@@ -10,7 +10,10 @@ import {
   projectToolDraftBlocksAsCode,
   stripToolDraftBlocks
 } from './chatReplyContentProjection';
-import { normalizeReplySpacing } from '../../engines/replyText';
+import {
+  normalizeAssistantVisiblePunctuation,
+  normalizeReplySpacing
+} from '../../engines/replyText';
 import type { McpResolvedToolDefinition } from '../../engines/mcpRuntime';
 import { resolveAssistantToolIngress } from './chatToolActionIngress';
 
@@ -127,10 +130,12 @@ export function parseAssistantReplyContent(
           : normalizedStreamingFallback
     );
 
+  const normalizedVisibleContent = normalizeAssistantVisiblePunctuation(visibleContent);
+
   return {
     parsed: effectiveParsed,
     toolIngressSources: ingressSources,
-    visibleContent,
+    visibleContent: normalizedVisibleContent,
     isToolOnlyTurn,
     taskUpdate
   };
