@@ -813,3 +813,64 @@ describe('parseAssistantReplyContent streaming phase', () => {
     );
   });
 });
+
+
+describe('assistant visible punctuation normalization', () => {
+  it('replaces em dash and en dash in final assistant prose', () => {
+    const { visibleContent } = parseAssistantReplyContent(
+      '宝宝—过来，我有话和你说 – 很重要。',
+      'medium',
+      'stable',
+      'final'
+    );
+
+    expect(visibleContent).toBe('宝宝，过来，我有话和你说，很重要。');
+  });
+
+  it('replaces em dash and en dash while streaming', () => {
+    const { visibleContent } = parseAssistantReplyContent(
+      '宝宝 — 过来，继续–说。',
+      'medium',
+      'stable',
+      'streaming'
+    );
+
+    expect(visibleContent).toBe('宝宝，过来，继续，说。');
+  });
+
+  it('keeps dash punctuation inside fenced code blocks', () => {
+    const content = [
+      '正文—继续。',
+      '',
+      '```js',
+      'const value = "a—b";',
+      '```'
+    ].join('\n');
+
+    const { visibleContent } = parseAssistantReplyContent(
+      content,
+      'medium',
+      'stable',
+      'final'
+    );
+
+    expect(visibleContent).toBe([
+      '正文，继续。',
+      '',
+      '```js',
+      'const value = "a—b";',
+      '```'
+    ].join('\n'));
+  });
+
+  it('keeps dash punctuation inside inline code', () => {
+    const { visibleContent } = parseAssistantReplyContent(
+      '请使用 `a—b`，然后继续—执行。',
+      'medium',
+      'stable',
+      'final'
+    );
+
+    expect(visibleContent).toBe('请使用 `a—b`，然后继续，执行。');
+  });
+});
